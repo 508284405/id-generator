@@ -1,5 +1,13 @@
 package com.leyue.id.domain.generator.model;
 
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
+
+import java.net.InetAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 雪花算法ID生成器领域模型
  */
@@ -75,6 +83,12 @@ public class IdGenerator {
      */
     private long lastTimestamp = -1L;
 
+    // 新增：网络时间偏差，单位毫秒
+    private volatile long timeOffset = 0L;
+
+    // 定时任务更新器
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
     /**
      * 构造方法
      *
@@ -90,6 +104,9 @@ public class IdGenerator {
         }
         this.dataCenterId = dataCenterId;
         this.machineId = machineId;
+
+        // 启动定时任务，定时同步网络时间偏差（例如每1分钟）
+        scheduler.scheduleAtFixedRate(this::syncTimeOffset, 0, 1, TimeUnit.MINUTES);
     }
 
     /**
@@ -98,7 +115,7 @@ public class IdGenerator {
      * @return 生成的ID
      */
     public synchronized long nextId() {
-        long timestamp = System.currentTimeMillis();
+        long timestamp = currentTimeMillis();
 
         // 如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过，抛出异常
         if (timestamp < lastTimestamp) {
@@ -140,5 +157,35 @@ public class IdGenerator {
             timestamp = System.currentTimeMillis();
         }
         return timestamp;
+    }
+
+    /**
+     * 通过网络时间协议 (NTP) 同步本地时间与网络时间的偏差
+     */
+    private void syncTimeOffset() {
+        try {
+            NTPUDPClient client = new NTPUDPClient();
+            client.setDefaultTimeout(3000);
+            InetAddress hostAddr = InetAddress.getByName("pool.ntp.org");
+            TimeInfo info = client.getTime(hostAddr);
+            info.computeDetails();
+            Long offset = info.getOffset();
+            if (offset != null) {
+                timeOffset = offset;
+                // 可以添加日志记录同步成功
+            }
+        } catch (Exception e) {
+            // 处理同步失败情况，保留现有偏差，或者记录日志
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取校正后的当前时间
+     *
+     * @return 网络校准后的当前毫秒时间戳
+     */
+    private long currentTimeMillis() {
+        return System.currentTimeMillis() + timeOffset;
     }
 }
