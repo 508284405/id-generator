@@ -6,6 +6,7 @@ import com.leyue.id.domain.generator.model.DataCenter;
 import com.leyue.id.generator.convertor.DataCenterConvertor;
 import com.leyue.id.generator.dataobject.DataCenterDO;
 import com.leyue.id.generator.mapper.DataCenterMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
@@ -14,16 +15,17 @@ import java.util.List;
  * 数据中心网关实现类
  */
 @Component
+@RequiredArgsConstructor
 public class DataCenterGatewayImpl implements DataCenterGateway {
     
-    @Resource
-    private DataCenterMapper dataCenterMapper;
+    private final DataCenterMapper dataCenterMapper;
+    private final DataCenterConvertor dataCenterConvertor;
     
     @Override
     public DataCenter save(DataCenter dataCenter) {
-        DataCenterDO dataCenterDO = DataCenterConvertor.INSTANCE.toDO(dataCenter);
+        DataCenterDO dataCenterDO = dataCenterConvertor.toDO(dataCenter);
         dataCenterMapper.insert(dataCenterDO);
-        return DataCenterConvertor.INSTANCE.toEntity(dataCenterDO);
+        return dataCenterConvertor.toEntity(dataCenterDO);
     }
     
     @Override
@@ -32,7 +34,7 @@ public class DataCenterGatewayImpl implements DataCenterGateway {
         if (dataCenterDO == null) {
             return null;
         }
-        return DataCenterConvertor.INSTANCE.toEntity(dataCenterDO);
+        return dataCenterConvertor.toEntity(dataCenterDO);
     }
     
     @Override
@@ -41,7 +43,7 @@ public class DataCenterGatewayImpl implements DataCenterGateway {
         if (dataCenterDO == null) {
             return null;
         }
-        return DataCenterConvertor.INSTANCE.toEntity(dataCenterDO);
+        return dataCenterConvertor.toEntity(dataCenterDO);
     }
     
     @Override
@@ -50,18 +52,18 @@ public class DataCenterGatewayImpl implements DataCenterGateway {
         if (dataCenterDO == null) {
             return null;
         }
-        return DataCenterConvertor.INSTANCE.toEntity(dataCenterDO);
+        return dataCenterConvertor.toEntity(dataCenterDO);
     }
     
     @Override
     public List<DataCenter> findAll() {
         List<DataCenterDO> dataCenterDOList = dataCenterMapper.selectList(new LambdaQueryWrapper<>());
-        return DataCenterConvertor.INSTANCE.toEntityList(dataCenterDOList);
+        return dataCenterConvertor.toEntityList(dataCenterDOList);
     }
     
     @Override
     public DataCenter update(DataCenter dataCenter) {
-        DataCenterDO dataCenterDO = DataCenterConvertor.INSTANCE.toDO(dataCenter);
+        DataCenterDO dataCenterDO = dataCenterConvertor.toDO(dataCenter);
         dataCenterMapper.updateById(dataCenterDO);
         return dataCenter;
     }

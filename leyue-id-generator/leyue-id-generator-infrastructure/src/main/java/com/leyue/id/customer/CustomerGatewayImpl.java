@@ -1,5 +1,6 @@
 package com.leyue.id.customer;
 
+import com.leyue.id.customer.mapper.CustomerMapper;
 import com.leyue.id.domain.customer.Customer;
 import com.leyue.id.domain.customer.gateway.CustomerGateway;
 

@@ -4,17 +4,15 @@ import com.leyue.id.domain.generator.model.DataCenter;
 import com.leyue.id.generator.dataobject.DataCenterDO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
  * 数据中心转换器
  */
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DataCenterConvertor {
-    
-    DataCenterConvertor INSTANCE = Mappers.getMapper(DataCenterConvertor.class);
-    
     /**
      * DO转换为领域模型
      *

@@ -9,6 +9,7 @@ import com.leyue.id.generator.dataobject.MachineInfoDO;
 import com.leyue.id.generator.dataobject.MachineStatusLogDO;
 import com.leyue.id.generator.mapper.MachineInfoMapper;
 import com.leyue.id.generator.mapper.MachineStatusLogMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,17 +18,18 @@ import java.util.List;
  * 机器节点网关实现类
  */
 @Component
+@RequiredArgsConstructor
 public class MachineNodeGatewayImpl implements MachineNodeGateway {
     
-    @Resource
-    private MachineInfoMapper machineInfoMapper;
+    private final MachineInfoMapper machineInfoMapper;
     
-    @Resource
-    private MachineStatusLogMapper machineStatusLogMapper;
+    private final MachineStatusLogMapper machineStatusLogMapper;
+    
+    private final MachineNodeConvertor machineNodeConvertor;
     
     @Override
     public MachineNode save(MachineNode machineNode) {
-        MachineInfoDO machineInfoDO = MachineNodeConvertor.INSTANCE.toDO(machineNode);
+        MachineInfoDO machineInfoDO = machineNodeConvertor.toDO(machineNode);
         machineInfoMapper.insert(machineInfoDO);
         machineNode.setId(machineInfoDO.getId());
         // 记录状态变更日志
@@ -41,7 +43,7 @@ public class MachineNodeGatewayImpl implements MachineNodeGateway {
         if (machineInfoDO == null) {
             return null;
         }
-        return MachineNodeConvertor.INSTANCE.toEntity(machineInfoDO);
+        return machineNodeConvertor.toEntity(machineInfoDO);
     }
     
     @Override
@@ -50,7 +52,7 @@ public class MachineNodeGatewayImpl implements MachineNodeGateway {
         if (machineInfoDO == null) {
             return null;
         }
-        return MachineNodeConvertor.INSTANCE.toEntity(machineInfoDO);
+        return machineNodeConvertor.toEntity(machineInfoDO);
     }
     
     @Override
@@ -59,7 +61,7 @@ public class MachineNodeGatewayImpl implements MachineNodeGateway {
         if (machineInfoDO == null) {
             return null;
         }
-        return MachineNodeConvertor.INSTANCE.toEntity(machineInfoDO);
+        return machineNodeConvertor.toEntity(machineInfoDO);
     }
     
     @Override
@@ -68,31 +70,33 @@ public class MachineNodeGatewayImpl implements MachineNodeGateway {
         if (machineInfoDO == null) {
             return null;
         }
-        return MachineNodeConvertor.INSTANCE.toEntity(machineInfoDO);
+        return machineNodeConvertor.toEntity(machineInfoDO);
     }
     
     @Override
     public List<MachineNode> findByCenterId(Long centerId) {
         List<MachineInfoDO> machineInfoDOList = machineInfoMapper.selectByCenterId(centerId);
-        return MachineNodeConvertor.INSTANCE.toEntityList(machineInfoDOList);
+        return machineNodeConvertor.toEntityList(machineInfoDOList);
     }
     
     @Override
     public List<MachineNode> findByStatus(MachineStatusEnum status) {
         List<MachineInfoDO> machineInfoDOList = machineInfoMapper.selectByStatus(status.name());
-        return MachineNodeConvertor.INSTANCE.toEntityList(machineInfoDOList);
+        return machineNodeConvertor.toEntityList(machineInfoDOList);
     }
     
     @Override
     public List<MachineNode> findAll() {
         List<MachineInfoDO> machineInfoDOList = machineInfoMapper.selectList(new LambdaQueryWrapper<>());
-        return MachineNodeConvertor.INSTANCE.toEntityList(machineInfoDOList);
+        return machineNodeConvertor.toEntityList(machineInfoDOList);
     }
     
     @Override
     public MachineNode update(MachineNode machineNode) {
-        MachineInfoDO machineInfoDO = MachineNodeConvertor.INSTANCE.toDO(machineNode);
+        MachineInfoDO machineInfoDO = machineNodeConvertor.toDO(machineNode);
         machineInfoMapper.updateById(machineInfoDO);
+        // 记录状态变更日志
+        logStatusChange(machineNode, machineNode.getStatus());
         return machineNode;
     }
     
@@ -107,7 +111,7 @@ public class MachineNodeGatewayImpl implements MachineNodeGateway {
     
     @Override
     public void logStatusChange(MachineNode machineNode, MachineStatusEnum status) {
-        MachineStatusLogDO logDO = MachineNodeConvertor.INSTANCE.toStatusLogDO(machineNode, status);
+        MachineStatusLogDO logDO = machineNodeConvertor.toStatusLogDO(machineNode, status);
         machineStatusLogMapper.insert(logDO);
     }
     

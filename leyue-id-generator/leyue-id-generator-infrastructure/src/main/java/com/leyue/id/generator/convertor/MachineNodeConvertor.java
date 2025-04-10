@@ -13,11 +13,8 @@ import java.util.List;
 /**
  * 机器节点转换器
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface MachineNodeConvertor {
-    
-    MachineNodeConvertor INSTANCE = Mappers.getMapper(MachineNodeConvertor.class);
-    
     /**
      * DO转换为领域模型
      *
