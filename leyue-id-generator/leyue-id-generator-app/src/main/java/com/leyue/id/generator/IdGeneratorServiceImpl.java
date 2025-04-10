@@ -24,18 +24,18 @@ import java.util.List;
  */
 @Service
 public class IdGeneratorServiceImpl implements IdGeneratorService {
-    
+
     @Resource
     private GenerateIdCmdExe generateIdCmdExe;
-    
+
     @Resource
     private MachineNodeGateway machineNodeGateway;
-    
+
     /**
      * 当前机器的节点信息
      */
     private MachineNode currentMachineNode;
-    
+
     @Override
     public SingleResponse<IdGenerateResponse> generateId(IdGenerateRequest request) {
         try {
@@ -45,7 +45,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
                 request.setDataCenterId(currentMachineNode.getCenterId());
                 request.setMachineId(currentMachineNode.getMachineId());
             }
-            
+
             // 执行ID生成
             IdGenerateResponse response = generateIdCmdExe.execute(request);
             return SingleResponse.of(response);
@@ -53,25 +53,24 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             return SingleResponse.buildFailure("GENERATE_ID_ERROR", e.getMessage());
         }
     }
-    
+
     @Override
     public MultiResponse<IdGenerateResponse> generateBatchIds(IdGenerateRequest request) {
         try {
             // 如果请求中没有指定数据中心ID和机器ID，使用当前机器的配置
-            if (request.getDataCenterId() == null || request.getMachineId() == null) {
-                setupCurrentMachineIfNeeded();
-                request.setDataCenterId(currentMachineNode.getCenterId());
-                request.setMachineId(currentMachineNode.getMachineId());
-            }
-            
+            setupCurrentMachineIfNeeded();
+            request.setDataCenterId(currentMachineNode.getCenterId());
+            request.setMachineId(currentMachineNode.getMachineId());
+
+
             // 确保批量大小有效
             if (request.getBatchSize() == null || request.getBatchSize() <= 0) {
                 request.setBatchSize(10); // 默认生成10个
             }
-            
+
             // 执行批量ID生成
             IdGenerateResponse response = generateIdCmdExe.execute(request);
-            
+
             // 将结果转换为列表响应
             List<IdGenerateResponse> responseList = new ArrayList<>();
             if (response.getIdList() != null && !response.getIdList().isEmpty()) {
@@ -86,13 +85,13 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             } else {
                 responseList.add(response);
             }
-            
+
             return MultiResponse.of(responseList);
         } catch (Exception e) {
             return MultiResponse.buildFailure("GENERATE_BATCH_IDS_ERROR", e.getMessage());
         }
     }
-    
+
     @Override
     public SingleResponse<IdGenerateResponse> parseId(Long id) {
         try {
@@ -103,14 +102,14 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             return SingleResponse.buildFailure("PARSE_ID_ERROR", e.getMessage());
         }
     }
-    
+
     @Override
     public SingleResponse<Boolean> registerMachine(Long dataCenterId) {
         try {
             // 获取本机IP和MAC地址
             String ip = getLocalIp();
             String mac = getLocalMac();
-            
+
             // 查询是否已存在该机器
             MachineNode existingNode = machineNodeGateway.findByMac(mac);
             if (existingNode != null) {
@@ -120,10 +119,10 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
                 currentMachineNode = existingNode;
                 return SingleResponse.of(true);
             }
-            
+
             // 分配新的机器ID
             Long machineId = machineNodeGateway.allocateMachineId(dataCenterId);
-            
+
             // 创建新的机器节点
             MachineNode machineNode = new MachineNode();
             machineNode.setCenterId(dataCenterId);
@@ -131,22 +130,22 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             machineNode.setIp(ip);
             machineNode.setMac(mac);
             machineNode.online(); // 设置为在线状态
-            
+
             // 保存机器节点
             MachineNode savedNode = machineNodeGateway.save(machineNode);
             currentMachineNode = savedNode;
-            
+
             return SingleResponse.of(true);
         } catch (Exception e) {
             return SingleResponse.buildFailure("REGISTER_MACHINE_ERROR", e.getMessage());
         }
     }
-    
+
     @Override
     public SingleResponse<Boolean> updateMachineOnline() {
         try {
             setupCurrentMachineIfNeeded();
-            
+
             // 更新状态为在线
             machineNodeGateway.updateStatus(currentMachineNode.getMachineId(), MachineStatusEnum.ONLINE);
             return SingleResponse.of(true);
@@ -154,12 +153,12 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             return SingleResponse.buildFailure("UPDATE_MACHINE_ONLINE_ERROR", e.getMessage());
         }
     }
-    
+
     @Override
     public SingleResponse<Boolean> updateMachineOffline() {
         try {
             setupCurrentMachineIfNeeded();
-            
+
             // 更新状态为离线
             machineNodeGateway.updateStatus(currentMachineNode.getMachineId(), MachineStatusEnum.OFFLINE);
             return SingleResponse.of(true);
@@ -167,7 +166,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             return SingleResponse.buildFailure("UPDATE_MACHINE_OFFLINE_ERROR", e.getMessage());
         }
     }
-    
+
     /**
      * 确保当前机器节点已经初始化
      */
@@ -181,7 +180,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
             currentMachineNode = machineNode;
         }
     }
-    
+
     /**
      * 获取本机IP地址
      */
@@ -189,14 +188,14 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
         InetAddress localHost = InetAddress.getLocalHost();
         return localHost.getHostAddress();
     }
-    
+
     /**
      * 获取本机MAC地址
      */
     private String getLocalMac() throws Exception {
         StringBuilder sb = new StringBuilder();
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-        
+
         while (networkInterfaces.hasMoreElements()) {
             NetworkInterface networkInterface = networkInterfaces.nextElement();
             if (networkInterface != null && !networkInterface.isLoopback() && !networkInterface.isVirtual()) {
@@ -209,7 +208,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
                 }
             }
         }
-        
+
         return sb.toString();
     }
 } 
