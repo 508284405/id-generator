@@ -4,25 +4,24 @@ import com.alibaba.cola.dto.SingleResponse;
 import com.leyue.id.api.generator.MachineRegistrationService;
 import com.leyue.id.config.DataCenterConfig;
 import com.leyue.id.dto.generator.MachineNodeDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 
 /**
  * 应用启动监听器，自动注册机器ID
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ApplicationStartupListener implements ApplicationListener<ApplicationStartedEvent> {
 
-    @Resource
-    private MachineRegistrationService machineRegistrationService;
+    private final MachineRegistrationService machineRegistrationService;
 
-    @Resource
-    private DataCenterConfig dataCenterConfig;
+    private final DataCenterConfig dataCenterConfig;
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {

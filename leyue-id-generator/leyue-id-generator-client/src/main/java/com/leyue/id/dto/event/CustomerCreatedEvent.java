@@ -1,7 +1,5 @@
 package com.leyue.id.dto.event;
 
-import static com.leyue.id.dto.event.DomainEventConstant.CUSTOMER_CREATED_TOPIC;
-
 /**
  * CustomerCreatedEvent
  *

@@ -1,6 +1,7 @@
 package com.leyue.id.domain.generator.gateway;
 
 import com.leyue.id.domain.generator.model.DataCenter;
+
 import java.util.List;
 
 /**

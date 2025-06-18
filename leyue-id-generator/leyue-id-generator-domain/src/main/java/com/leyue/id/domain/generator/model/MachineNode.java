@@ -1,6 +1,7 @@
 package com.leyue.id.domain.generator.model;
 
 import com.leyue.id.domain.generator.enums.MachineStatusEnum;
+
 import java.util.Date;
 
 /**

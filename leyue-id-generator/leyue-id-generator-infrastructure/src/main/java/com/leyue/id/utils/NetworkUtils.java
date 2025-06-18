@@ -1,11 +1,12 @@
 package com.leyue.id.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 网络工具类，用于获取本机网络信息

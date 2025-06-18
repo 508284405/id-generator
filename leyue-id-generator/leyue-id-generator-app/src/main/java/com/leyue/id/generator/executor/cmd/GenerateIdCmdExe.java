@@ -4,6 +4,7 @@ import com.leyue.id.domain.generator.model.IdGenerator;
 import com.leyue.id.dto.generator.IdGenerateRequest;
 import com.leyue.id.dto.generator.IdGenerateResponse;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 

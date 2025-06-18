@@ -5,18 +5,19 @@ import com.alibaba.cola.dto.SingleResponse;
 import com.leyue.id.api.generator.IdGeneratorService;
 import com.leyue.id.dto.generator.IdGenerateRequest;
 import com.leyue.id.dto.generator.IdGenerateResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import javax.annotation.Resource;
+
 
 /**
  * ID生成器控制器
  */
 @RestController
 @RequestMapping("/api/generator")
+@RequiredArgsConstructor
 public class IdGeneratorController {
     
-    @Resource
-    private IdGeneratorService idGeneratorService;
+    private final IdGeneratorService idGeneratorService;
     
     /**
      * 生成单个ID

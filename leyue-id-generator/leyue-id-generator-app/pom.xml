@@ -21,6 +21,10 @@
             <groupId>com.leyue.id</groupId>
             <artifactId>leyue-id-generator-infrastructure</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.leyue.id</groupId>
+            <artifactId>leyue-id-generator-domain</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cola</groupId>

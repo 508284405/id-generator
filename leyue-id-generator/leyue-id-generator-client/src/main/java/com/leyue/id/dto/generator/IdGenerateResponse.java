@@ -1,6 +1,7 @@
 package com.leyue.id.dto.generator;
 
 import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 

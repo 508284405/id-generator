@@ -10,9 +10,9 @@ import com.leyue.id.domain.generator.model.MachineNode;
 import com.leyue.id.dto.generator.IdGenerateRequest;
 import com.leyue.id.dto.generator.IdGenerateResponse;
 import com.leyue.id.generator.executor.cmd.GenerateIdCmdExe;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
@@ -23,13 +23,12 @@ import java.util.List;
  * ID生成器服务实现类
  */
 @Service
+@RequiredArgsConstructor
 public class IdGeneratorServiceImpl implements IdGeneratorService {
 
-    @Resource
-    private GenerateIdCmdExe generateIdCmdExe;
+    private final GenerateIdCmdExe generateIdCmdExe;
 
-    @Resource
-    private MachineNodeGateway machineNodeGateway;
+    private final MachineNodeGateway machineNodeGateway;
 
     /**
      * 当前机器的节点信息

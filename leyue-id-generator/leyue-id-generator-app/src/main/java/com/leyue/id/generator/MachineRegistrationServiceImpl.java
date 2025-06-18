@@ -9,12 +9,13 @@ import com.leyue.id.domain.generator.model.DataCenter;
 import com.leyue.id.domain.generator.model.MachineNode;
 import com.leyue.id.dto.generator.MachineNodeDTO;
 import com.leyue.id.utils.NetworkUtils;
+import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -22,13 +23,12 @@ import java.util.Date;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MachineRegistrationServiceImpl implements MachineRegistrationService {
 
-    @Resource
-    private DataCenterGateway dataCenterGateway;
+    private final DataCenterGateway dataCenterGateway;
 
-    @Resource
-    private MachineNodeGateway machineNodeGateway;
+    private final MachineNodeGateway machineNodeGateway;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -8,7 +8,7 @@ import com.leyue.id.generator.dataobject.DataCenterDO;
 import com.leyue.id.generator.mapper.DataCenterMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import javax.annotation.Resource;
+
 import java.util.List;
 
 /**

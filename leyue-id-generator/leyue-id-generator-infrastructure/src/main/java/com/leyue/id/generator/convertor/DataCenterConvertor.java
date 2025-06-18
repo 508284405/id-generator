@@ -3,9 +3,8 @@ package com.leyue.id.generator.convertor;
 import com.leyue.id.domain.generator.model.DataCenter;
 import com.leyue.id.generator.dataobject.DataCenterDO;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.factory.Mappers;
+
 import java.util.List;
 
 /**

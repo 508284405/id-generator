@@ -1,30 +1,27 @@
 package com.leyue.id.customer;
 
+import com.alibaba.cola.catchlog.CatchAndLog;
 import com.alibaba.cola.dto.MultiResponse;
 import com.alibaba.cola.dto.Response;
-import com.alibaba.cola.catchlog.CatchAndLog;
 import com.leyue.id.api.CustomerServiceI;
+import com.leyue.id.customer.executor.CustomerAddCmdExe;
+import com.leyue.id.customer.executor.query.CustomerListByNameQryExe;
 import com.leyue.id.dto.CustomerAddCmd;
 import com.leyue.id.dto.CustomerListByNameQry;
 import com.leyue.id.dto.data.CustomerDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.leyue.id.customer.executor.CustomerAddCmdExe;
-import com.leyue.id.customer.executor.query.CustomerListByNameQryExe;
-
-import javax.annotation.Resource;
 
 
 @Service
 @CatchAndLog
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerServiceI {
 
-    @Resource
-    private CustomerAddCmdExe customerAddCmdExe;
+    private final CustomerAddCmdExe customerAddCmdExe;
 
-    @Resource
-    private CustomerListByNameQryExe customerListByNameQryExe;
+    private final CustomerListByNameQryExe customerListByNameQryExe;
 
     public Response addCustomer(CustomerAddCmd customerAddCmd) {
         return customerAddCmdExe.execute(customerAddCmd);

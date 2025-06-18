@@ -11,7 +11,7 @@ import com.leyue.id.generator.mapper.MachineInfoMapper;
 import com.leyue.id.generator.mapper.MachineStatusLogMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import javax.annotation.Resource;
+
 import java.util.List;
 
 /**

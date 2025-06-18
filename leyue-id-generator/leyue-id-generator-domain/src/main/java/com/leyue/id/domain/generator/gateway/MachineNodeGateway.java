@@ -2,6 +2,7 @@ package com.leyue.id.domain.generator.gateway;
 
 import com.leyue.id.domain.generator.enums.MachineStatusEnum;
 import com.leyue.id.domain.generator.model.MachineNode;
+
 import java.util.List;
 
 /**
