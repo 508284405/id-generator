@@ -39,6 +39,9 @@
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jakarta-el.version>3.0.3</jakarta-el.version>
         
+        <!-- JWT -->
+        <jjwt.version>0.11.5</jjwt.version>
+        
         <!-- Nacos -->
         <nacos.version>2.5.1</nacos.version>
         
@@ -52,6 +55,7 @@
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
         <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
+        <skywalking.version>9.4.0</skywalking.version>
     </properties>
 
     <modules>
@@ -73,6 +77,15 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
+            <version>${skywalking.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 
@@ -210,6 +223,25 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-mapstruct-binding</artifactId>
                 <version>${lombok-mapstruct-binding.version}</version>
+            </dependency>
+
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
             </dependency>
 
             <!-- Nacos (已在spring-cloud-alibaba-dependencies中管理，这里保留以防版本覆盖) -->

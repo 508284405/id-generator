@@ -25,3 +25,4 @@ bin/
 doc/
 .DS_Store
 /start/src/main/resources/bootstrap.yaml
+/start/src/main/resources/application.yml
